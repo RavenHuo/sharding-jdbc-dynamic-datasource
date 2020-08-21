@@ -121,7 +121,7 @@ dynamic:
 ```
 
 ## <p id="配置分库分表">配置分库分表
-目前只之差jpa
+目前只支持jpa（因为工作中常用。。）
 ```
 dynamic:
   type: sharding
