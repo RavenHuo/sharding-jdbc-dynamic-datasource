@@ -18,7 +18,7 @@
 ## <p id="项目下载运行"> 项目下载运行
 
 ```
-git clone git@github.com:RavenHuo/dynamic-datasource.git
+git clone git@github.com:RavenHuo/sharding-jdbc-dynamic-datasource.git
 cd ./dynamic-datasource
 mvn clean install -Dmaven.test.skip=true
 ```
