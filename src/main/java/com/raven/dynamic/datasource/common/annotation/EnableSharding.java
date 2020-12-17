@@ -1,7 +1,7 @@
 package com.raven.dynamic.datasource.common.annotation;
 
 
-import com.raven.dynamic.datasource.sharding.ShardingTablePackage;
+import com.raven.dynamic.datasource.sharding.ShardingTablePackageRegister;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@Import(ShardingTablePackage.Registrar.class)
+@Import(ShardingTablePackageRegister.class)
 public @interface EnableSharding {
 
     /**
