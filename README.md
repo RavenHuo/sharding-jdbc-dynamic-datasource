@@ -18,7 +18,7 @@
 ## <p id="项目下载运行"> 项目下载运行
 
 ```
-git clone git@github.com:RavenHuo/dynamic-datasource.git
+git clone git@github.com:RavenHuo/sharding-jdbc-dynamic-datasource.git
 cd ./dynamic-datasource
 mvn clean install -Dmaven.test.skip=true
 ```
@@ -121,7 +121,7 @@ dynamic:
 ```
 
 ## <p id="配置分库分表">配置分库分表
-目前只之差jpa
+目前只支持jpa（因为工作中常用。。）
 ```
 dynamic:
   type: sharding
