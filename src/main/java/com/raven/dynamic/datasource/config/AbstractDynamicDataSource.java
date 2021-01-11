@@ -24,8 +24,10 @@ public abstract class AbstractDynamicDataSource implements DynamicDataSourceTemp
     protected void initDynamicDataSource(List<DynamicDataSourceProperties> dataSourcePropertiesList) {
         dataSourcePropertiesList.stream().forEach(a -> {
             DataSource dataSource = createDataSource(a, HikariDataSource.class);
-            DATA_SOURCE_MAP.put(a.getDataSourceTag(), dataSource);
-            log.info("load datasource from properties  tag={}", a.getDataSourceTag());
+            if (!checkIfExist(dataSource)) {
+                DATA_SOURCE_MAP.put(a.getDataSourceTag(), dataSource);
+                log.info("load datasource from properties  tag={}", a.getDataSourceTag());
+            }
         });
     }
 
@@ -102,4 +104,12 @@ public abstract class AbstractDynamicDataSource implements DynamicDataSourceTemp
         });
     }
 
+    private boolean checkIfExist(DataSource dataSource) {
+        for (Map.Entry<Object, Object> entry : DATA_SOURCE_MAP.entrySet()) {
+            if (dataSource.equals(entry.getValue())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
