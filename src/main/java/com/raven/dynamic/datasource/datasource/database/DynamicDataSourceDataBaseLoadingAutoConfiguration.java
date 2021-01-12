@@ -8,6 +8,7 @@ import com.raven.dynamic.datasource.datasource.database.entity.DynamicDataSource
 import com.raven.dynamic.datasource.datasource.database.repository.DynamicDataSourceConfigRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cglib.beans.BeanCopier;
 import org.springframework.stereotype.Component;
@@ -29,12 +30,15 @@ public class DynamicDataSourceDataBaseLoadingAutoConfiguration extends AbstractD
     @Autowired
     private DynamicDataSourceConfigRepository dynamicDataSourceConfigRepository;
 
+    @Value("${dynamic.datasource.className:com.zaxxer.hikari.HikariDataSource}")
+    private String datasourceClassName;
+
     @Override
     @PostConstruct
-    public void init() {
+    public void init() throws ClassNotFoundException{
         List<DynamicDataSourceConfigEntity> dynamicDataSourceConfigEntityList = dynamicDataSourceConfigRepository.findAllByStatus(TableStatusEnum.NORMAL_STATUS.getCode());
 
-        loadDataSource(dynamicDataSourceConfigEntityList);
+        loadDataSource(dynamicDataSourceConfigEntityList, datasourceClassName);
     }
 
     /**

@@ -21,9 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractDynamicDataSource implements DynamicDataSourceTemplate {
 
 
-    protected void initDynamicDataSource(List<DynamicDataSourceProperties> dataSourcePropertiesList) {
-        dataSourcePropertiesList.stream().forEach(a -> {
-            DataSource dataSource = createDataSource(a, HikariDataSource.class);
+    protected void initDynamicDataSource(DynamicDataSourceInfo dynamicDataSourceInfo) {
+        List<DynamicDataSourceProperties> dataSourceProperties = dynamicDataSourceInfo.getDynamicDataSourcePropertiesList();
+        dataSourceProperties.stream().forEach(a -> {
+            DataSource dataSource = createDataSource(a, dynamicDataSourceInfo.getDataSource());
             if (!checkIfExist(dataSource)) {
                 DATA_SOURCE_MAP.put(a.getDataSourceTag(), dataSource);
                 log.info("load datasource from properties  tag={}", a.getDataSourceTag());
@@ -41,15 +42,18 @@ public abstract class AbstractDynamicDataSource implements DynamicDataSourceTemp
     /**
      * 初始化方法
      */
-    public abstract void init();
+    public abstract void init() throws ClassNotFoundException;
 
     /**
      * 初始化方法
      */
-    public void loadDataSource(List<?> dataSourceProperties) {
-        initDynamicDataSource(loadDataSourceProperties(dataSourceProperties));
+    public void loadDataSource(List<?> dataSourceProperties, String datasourceClassName) throws ClassNotFoundException{
+        initDynamicDataSource(buildDynamicDataSourceInfo(loadDataSourceProperties(dataSourceProperties), datasourceClassName));
     }
 
+    private DynamicDataSourceInfo buildDynamicDataSourceInfo(List<DynamicDataSourceProperties> dynamicDataSourcePropertiesList, String datasourceClassName) throws ClassNotFoundException{
+        return new DynamicDataSourceInfo(dynamicDataSourcePropertiesList, datasourceClassName);
+    }
 
     protected void checkDataSourceProperties(List<DynamicDataSourceProperties> dataSourceProperties) {
         if (CollectionUtils.isEmpty(dataSourceProperties)) {

@@ -5,6 +5,7 @@ import com.raven.dynamic.datasource.config.AbstractDynamicDataSource;
 import com.raven.dynamic.datasource.config.DynamicDataSourceProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -28,10 +29,13 @@ public class DynamicDataSourcePropertiesLoadingAutoConfiguration extends Abstrac
     @Autowired
     private PropertiesDataSourceConfigProperties propertiesDataSourceConfigProperties;
 
+    @Value("${dynamic.datasource.className:com.zaxxer.hikari.HikariDataSource}")
+    private String datasourceClassName;
+
     @Override
     @PostConstruct
-    public void init() {
-        loadDataSource(propertiesDataSourceConfigProperties.getDatasource());
+    public void init() throws ClassNotFoundException{
+        loadDataSource(propertiesDataSourceConfigProperties.getDatasource(), datasourceClassName);
     }
 
     /**

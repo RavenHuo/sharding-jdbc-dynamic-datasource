@@ -6,6 +6,7 @@ import com.raven.dynamic.datasource.common.exception.DynamicSourceException;
 import com.raven.dynamic.datasource.config.AbstractDynamicDataSource;
 import com.raven.dynamic.datasource.config.DynamicDataSourceProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,11 +38,14 @@ public class DynamicDataSourceMasterSalveLoadingAutoConfiguration extends Abstra
     private EntityManagerFactory entityManagerFactory;
 
 
+    @Value("${dynamic.datasource.className:com.zaxxer.hikari.HikariDataSource}")
+    private String datasourceClassName;
+
     @Override
     @PostConstruct
-    public void init() {
+    public void init() throws ClassNotFoundException{
         List<MasterSlaveDataSourceProperties> masterSlaveDataSourceProperties = new ArrayList<>();
-        loadDataSource(masterSlaveDataSourceProperties);
+        loadDataSource(masterSlaveDataSourceProperties, datasourceClassName);
     }
 
     @Bean(name="transactionManager")
