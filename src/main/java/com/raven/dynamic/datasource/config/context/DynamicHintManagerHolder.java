@@ -21,6 +21,7 @@ public class DynamicHintManagerHolder {
 
         shardingTableName.stream().forEach(tableName-> {
             hintManager.addTableShardingValue(tableName,1);
+            // 强制路由，切换数据源
             hintManager.addDatabaseShardingValue(tableName, dbType);
         });
     }
