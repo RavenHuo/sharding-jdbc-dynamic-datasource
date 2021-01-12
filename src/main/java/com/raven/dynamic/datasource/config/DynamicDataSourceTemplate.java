@@ -11,22 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: huorw
  * @create: 2020-05-23 22:46
  */
-public interface DynamicDataSourceTemplate {
+public interface DynamicDataSourceTemplate extends DynamicDataSourceFactory{
 
     Map<Object, Object> DATA_SOURCE_MAP = new ConcurrentHashMap<>();
-
-    /**
-     * 初始化数据源
-     * @param properties
-     * @param type
-     * @param <T>
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    default  <T> T createDataSource(DataSourceProperties properties,
-                                            Class<? extends DataSource> type) {
-        return (T) properties.initializeDataSourceBuilder().type(type).build();
-    }
 
     /**
      * 获取配置的数据源
