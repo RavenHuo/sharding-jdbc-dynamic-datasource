@@ -52,7 +52,8 @@ public class ShardingDynamicDataSourceAutoConfig implements ApplicationRunner, D
     @Primary
     public ShardingDynamicDataSource getDataSource(@Qualifier(DynamicSourceConstant.PRIMARY_DATASOURCE_BEAN_NAME) DataSource primaryDatasource) throws SQLException {
         log.info("shardingDataSource loading--------------------");
-        return buildDataSource(primaryDatasource);
+        shardingDataSource =  buildDataSource(primaryDatasource);
+        return shardingDataSource;
     }
 
     private ShardingDynamicDataSource buildDataSource(DataSource primaryDatasource) throws SQLException {
@@ -83,12 +84,11 @@ public class ShardingDynamicDataSourceAutoConfig implements ApplicationRunner, D
         // 强制路由转换必须设置默认路由配置
         ShardingHintShardingAlgorithm shardingHintShardingAlgorithm = new ShardingHintShardingAlgorithm();
         shardingRuleConfig.setDefaultDatabaseShardingStrategyConfig(new HintShardingStrategyConfiguration(shardingHintShardingAlgorithm));
-        Properties p = new Properties();
-        p.setProperty(SQL_PROPERTY, Boolean.TRUE.toString());
-        p.setProperty(CHECK_PROPERTY, Boolean.TRUE.toString());
+        Properties properties = new Properties();
+        properties.setProperty(SQL_PROPERTY, Boolean.TRUE.toString());
+        properties.setProperty(CHECK_PROPERTY, Boolean.TRUE.toString());
         // 获取数据源对象
-        shardingDataSource = ShardingDynamicDataSource.createDataSource(dataSourceMap, shardingRuleConfig, new ConcurrentHashMap(1), p);
-        return shardingDataSource;
+        return ShardingDynamicDataSource.createDataSource(dataSourceMap, shardingRuleConfig, new ConcurrentHashMap(1), properties);
     }
 
     /**
